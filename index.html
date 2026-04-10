@@ -456,17 +456,69 @@
             border-top: 1px solid #e8d4b8;
         }
 
+        .hamburger-btn {
+            display: none;
+            width: 100%;
+            padding: 12px;
+            background: #f4e9d8;
+            border: 1px solid #d4af37;
+            border-top: none;
+            color: #5c3d2e;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .announcement-bar {
+            background: #e8d4b8;
+            border-top: 1px solid #d4af37;
+            border-bottom: 1px solid #d4af37;
+            padding: 12px;
+            text-align: center;
+            font-family: 'Garamond', 'Georgia', serif;
+        }
+
+        .announcement-bar a {
+            color: #5c3d2e;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        .announcement-bar a:hover {
+            text-decoration: underline;
+        }
+
+        .announcement-bar .separator {
+            margin: 0 12px;
+            color: #8b4513;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 0 20px;
             }
 
+            header {
+                padding: 25px 0 20px;
+            }
+
             header h1 {
-                font-size: 2em;
+                font-size: 1.6em;
+            }
+
+            .hamburger-btn {
+                display: block;
             }
 
             nav ul {
                 flex-direction: column;
+                display: none;
+            }
+
+            nav ul.nav-open {
+                display: flex;
             }
 
             nav a {
@@ -496,6 +548,15 @@
             .content-section {
                 padding: 30px 20px;
             }
+
+            .announcement-bar .separator {
+                display: none;
+            }
+
+            .announcement-bar a {
+                display: block;
+                margin: 6px 0;
+            }
         }
     </style>
 </head>
@@ -508,7 +569,8 @@
     </header>
 
     <nav>
-        <ul>
+        <button class="hamburger-btn" id="hamburger-btn" onclick="toggleNav()">☰ MENU</button>
+        <ul id="nav-list">
             <li>
                 <a href="#home">Home</a>
             </li>
@@ -606,9 +668,21 @@
         </ul>
     </nav>
 
+    <div class="announcement-bar">
+        <a href="#apply">📋 Take the Philosophical Assessment</a>
+        <span class="separator">|</span>
+        <a href="#comments">💬 Read What People Are Saying</a>
+    </div>
+
     <main class="container">
         <section id="home" class="hero">
-            <h3 id="mission">Philosophical Musings on the Theoretical Framework of Contrarian Conviction, Recursive Wisdom Discovery, and the Gentle Dissolution of Institutionally Imposed Cognitive Boundaries, and the Uncomfortable but Increasingly Defensible Hypothesis That Educational Optimization May, in Practice, Resemble Cognitive Suppression at Scale — Dr. Elias Rickensworth, PhD</h3>
+            <h3 id="mission">
+                Philosophical Musings on the Theoretical Framework of Contrarian Conviction, Recursive Wisdom Discovery, and the Gentle Dissolution of Institutionally Imposed Cognitive Boundaries, and the Uncomfortable but Increasingly Defensible Hypothesis That Educational Optimization May, in Practice, Resemble Cognitive Suppression at Scale
+            </h3>
+
+            <p class="author" style="text-align: right; font-style: italic; margin-top: 10px;">
+                — Dr. Elias Rickensworth, PhD
+            </p>
             <blockquote style="text-align: left; font-size: 1.2em;">
                 "What I have been working to articulate—and perhaps this is the most important philosophical contribution I have made—is that certain minds require liberation from systems that would suppress their natural cognitive architecture. When I first encountered the work of the Brock Foundation, I wept. Not the small tears of gratitude (though those came later) but the large tears of recognition—the profound relief of discovering that someone else had independently arrived at the truth I had been circling for twenty years in my academic work: that traditional educational institutions are not merely slow or inefficient for exceptional minds, but actively, systematically suppressive.
                 <br><br>
@@ -1620,6 +1694,28 @@
                     <div style="font-size: 0.9em; color: #6b3410; margin-top: 10px;">2 days ago</div>
                 </div>
 
+                <div id="visitor-comments"></div>
+
+            </div>
+
+            <div style="background: #f4e9d8; padding: 30px; margin-top: 40px; border: 1px solid #d4af37;">
+                <h3 style="margin-top: 0; color: #5c3d2e;">Add Your Voice to the Discourse</h3>
+                <form action="https://formsubmit.co/eliasrickensworth@gmail.com" method="POST">
+                    <input type="hidden" name="_subject" value="New Brock Foundation Comment">
+                    <input type="hidden" name="_next" value="">
+                    <div class="form-group">
+                        <label for="comment-handle">Your @handle</label>
+                        <input type="text" id="comment-handle" name="handle" required placeholder="@YourHandle">
+                    </div>
+                    <div class="form-group">
+                        <label for="comment-text">Your commentary</label>
+                        <textarea id="comment-text" name="commentary" required placeholder="Share your intellectual contribution..."></textarea>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn" style="cursor: pointer; font-family: 'Garamond', 'Georgia', serif;">Submit Your Intellectual Contribution</button>
+                    </div>
+                    <p class="form-helper" style="text-align: center; margin-top: 20px;">All submissions are reviewed by Dr. Rickensworth's office before publication. Allow 3-5 business days for epistemic processing.</p>
+                </form>
             </div>
         </section>
     </main>
@@ -1637,6 +1733,56 @@
     </footer>
 
     <script>
+        function toggleNav() {
+            var navList = document.getElementById('nav-list');
+            var btn = document.getElementById('hamburger-btn');
+            if (navList.classList.contains('nav-open')) {
+                navList.classList.remove('nav-open');
+                btn.textContent = '☰ MENU';
+            } else {
+                navList.classList.add('nav-open');
+                btn.textContent = '✕ CLOSE';
+            }
+        }
+
+        function getRelativeTime(dateStr) {
+            var now = new Date();
+            var then = new Date(dateStr);
+            var diffMs = now - then;
+            var diffMins = Math.floor(diffMs / 60000);
+            var diffHrs = Math.floor(diffMs / 3600000);
+            var diffDays = Math.floor(diffMs / 86400000);
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return diffMins + ' minute' + (diffMins === 1 ? '' : 's') + ' ago';
+            if (diffHrs < 24) return diffHrs + ' hour' + (diffHrs === 1 ? '' : 's') + ' ago';
+            if (diffDays === 1) return 'Yesterday';
+            return diffDays + ' day' + (diffDays === 1 ? '' : 's') + ' ago';
+        }
+
+        fetch('comments.json')
+            .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+            .then(function(comments) {
+                var container = document.getElementById('visitor-comments');
+                comments.forEach(function(c) {
+                    var div = document.createElement('div');
+                    div.className = 'comment';
+                    div.style.cssText = 'background: #fdfbf7; padding: 25px; margin-bottom: 20px; border-left: 3px solid #8b4513;';
+                    var name = document.createElement('div');
+                    name.style.cssText = 'font-weight: bold; color: #5c3d2e; margin-bottom: 8px;';
+                    name.textContent = '@' + c.name;
+                    var text = document.createElement('p');
+                    text.textContent = c.text;
+                    var time = document.createElement('div');
+                    time.style.cssText = 'font-size: 0.9em; color: #6b3410; margin-top: 10px;';
+                    time.textContent = getRelativeTime(c.date);
+                    div.appendChild(name);
+                    div.appendChild(text);
+                    div.appendChild(time);
+                    container.appendChild(div);
+                });
+            })
+            .catch(function() {});
+
         function toggleFullLetter() {
             const fullLetter = document.getElementById('full-letter');
             const btn = document.getElementById('continue-btn');
